@@ -8,11 +8,11 @@ Generated based on [dbanty/rust-github-action-template](https://github.com/dbant
 | Name       | Description                                                  | Default  |
 |------------|--------------------------------------------------------------|----------|
 | `paths`    | The paths inside the github repository you are interested in | `.`      |
-| `excludes` | Unix style glob patterns to exclude from the count           | `<none>` |
-Examples:
+| `excluded` | Unix style glob patterns to exclude from the count           | `<none>` |
+
 - `paths`:
   - `frontend,backend,"Directory with spaces"`
-- `excludes`
+- `excluded`
   - `*.json,node_modules,"Directory with spaces"`
 
 ## Outputs
