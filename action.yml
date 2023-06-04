@@ -12,4 +12,4 @@ inputs:
     default: ''
 runs:
   using: 'docker'
-  image: 'ghcr.io/sh1nku/count-loc-action:v1'
+  image: 'docker://ghcr.io/sh1nku/count-loc-action:v1'

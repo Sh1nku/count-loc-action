@@ -28,7 +28,8 @@ Rust_code=100
 Rust_blanks=10
 Rust_comments=20
 ```
-There is also an entry for `Total` using the same format
+There is also an entry for `Total` using the same format.
+
 Take a look at the languages [here](https://github.com/XAMPPRocky/tokei/blob/v12.1.2/README.md#supported-languages)
 
 ## Example usage
