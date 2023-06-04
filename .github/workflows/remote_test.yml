@@ -1,0 +1,62 @@
+name: Test remote action
+on:
+  workflow_run:
+    workflows: ["Docker Publish"]
+    branches: [v1]
+    types:
+      - completed
+
+jobs:
+  test_excluded:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: loc
+        uses: ./
+        with:
+          excluded: "*.json"
+      - name: Verify Total set
+        if: steps.loc.outputs.Total_code != null
+        run: echo "Total was set"
+      - name: Verify JSON not set
+        if: steps.loc.outputs.Json_code != null
+        run: echo "JSON was counted when it should have been excluded" && exit 1
+  test_paths:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: loc
+        uses: ./
+        with:
+          paths: "src,.github"
+      - name: Verify Rust set
+        if: steps.loc.outputs.Rust_code != null
+        run: echo "Total was set"
+      - name: Verify Yaml set
+        if: steps.loc.outputs.Yaml_code != null
+        run: echo "Total was set"
+      - name: Verify JSON not set
+        if: steps.loc.outputs.Json_code != null
+        run: echo "JSON was counted when the paths should not contain any" && exit 1
+  example_action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: loc
+        uses: Sh1nku/count-loc-action@v1
+        with:
+          excluded: "*.json,*.yaml"
+      - name: Verify Total set
+        if: |
+          steps.loc.outputs.Total_code != null &&
+          steps.loc.outputs.Total_blanks != null &&
+          steps.loc.outputs.Total_comments != null
+        run: |
+          echo "Total loc: ${{ steps.loc.outputs.Total_code }}"
+      - name: Verify Rust set
+        if: |
+          steps.loc.outputs.Rust_code != null &&
+          steps.loc.outputs.Rust_blanks != null &&
+          steps.loc.outputs.Rust_comments != null
+        run: |
+          echo "Rust was counted: ${{ steps.loc.outputs.Rust_code }}"

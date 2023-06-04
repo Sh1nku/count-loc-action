@@ -1,0 +1,13 @@
+[package]
+name = "count-loc-action"
+description = "Use tokei to count lines of code in a github action"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.69"
+
+[dependencies]
+csv = { version = "1.2.2"}
+tokei = { version = "12.1.2"}
+
+[dev-dependencies]
+tempdir = "0.3.7"

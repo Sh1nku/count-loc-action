@@ -1,0 +1,15 @@
+name: count-loc-action
+description: Use tokei to count lines of code in a github action
+author: Sh1nku <42642351+Sh1nku@users.noreply.github.com>
+inputs:
+  paths:
+    required: false
+    description: 'UTF-8 encoded comma separated list of paths to search. Parsed as CSV, with (") as quote char'
+    default: '.'
+  excluded:
+    required: false
+    description: 'UTF-8 encoded comma separated list of things to exclude. Parsed as CSV, with (") as quote char'
+    default: ''
+runs:
+  using: 'docker'
+  image: 'ghcr.io/sh1nku/count-loc-action:v1'
