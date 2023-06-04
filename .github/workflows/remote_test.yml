@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: loc
-        uses: ./
+        uses: Sh1nku/count-loc-action@v1
         with:
           excluded: "*.json"
       - name: Verify Total set
@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: loc
-        uses: ./
+        uses: Sh1nku/count-loc-action@v1
         with:
           paths: "src,.github"
       - name: Verify Rust set

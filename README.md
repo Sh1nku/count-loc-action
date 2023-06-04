@@ -5,28 +5,26 @@ Counts lines of code using [tokei](https://github.com/XAMPPRocky/tokei)
 Generated based on [dbanty/rust-github-action-template](https://github.com/dbanty/rust-github-action-template)
 
 ## Inputs
-- `paths` 
-  - Default: `.` 
-  - The paths of the github repository you are interested in
-  - Examples:
-    - `frontend,backend,"Directory with spaces"`
-- `exclude`
-  - Default: `<none>`
-  - Unix style glob patterns to exclude from the count
-  - Examples:
-    - `*.json,node_modules,"Directory with spaces"`
+| Name       | Description                                                  | Default  |
+|------------|--------------------------------------------------------------|----------|
+| `paths`    | The paths inside the github repository you are interested in | `.`      |
+| `excludes` | Unix style glob patterns to exclude from the count           | `<none>` |
+Examples:
+- `paths`:
+  - `frontend,backend,"Directory with spaces"`
+- `excludes`
+  - `*.json,node_modules,"Directory with spaces"`
 
 ## Outputs
 A list of languages with the format:
 ```
-<language name>_code=<lines of code>
-<language name>_blanks=<blank lines>
-<language name>_comments=<ines of comments>
-
+<language_name>_code
+<language_name>_blanks
+<language_name>_comments
 # Eg
-Rust_code=100
-Rust_blanks=10
-Rust_comments=20
+Rust_code
+Rust_blanks
+Rust_comments
 ```
 There is also an entry for `Total` using the same format.
 
