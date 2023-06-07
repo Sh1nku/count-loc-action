@@ -1,5 +1,5 @@
 # count-loc-action
-
+![Lines of Code badge](https://api.badgestore.dev/badge/6f30aef3a19c197c/local) <br>
 Counts lines of code using [tokei](https://github.com/XAMPPRocky/tokei)
 
 Generated based on [dbanty/rust-github-action-template](https://github.com/dbanty/rust-github-action-template)
@@ -31,6 +31,7 @@ There is also an entry for `Total` using the same format.
 Take a look at the languages [here](https://github.com/XAMPPRocky/tokei/blob/v12.1.2/README.md#supported-languages)
 
 ## Example usage
+### Standalone
 ```yaml
 name: Count loc
 on: [push]
@@ -56,6 +57,37 @@ jobs:
         steps.loc.outputs.Rust_comments != null
       run: |
         echo "Rust was counted: ${{ steps.loc.outputs.Rust_code }}"
+```
+### Badgestore.dev example
+```yaml
+name: Count lines of code for the project, and upload to the badge store
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  count-loc-and-upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - id: loc
+        name: Count lines of code
+        uses: Sh1nku/count-loc-action@v1
+        with:
+          excluded: "*.json,*.svg,*.md"
+      - uses: Sh1nku/badgestore-update-badge-action@v1
+        name: Update badge
+        id: badge
+        with:
+          right-label: ${{ steps.loc.outputs.Total_code }}
+          read-write-key: ${{ secrets.LOC_COUNT_BADGE_RW_KEY }}
+      - uses: koki-develop/hub-purge-action@v1
 ```
 
 ## Limitations
