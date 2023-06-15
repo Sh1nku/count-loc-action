@@ -23,6 +23,6 @@ jobs:
         name: Update badge
         id: badge
         with:
-          right-label: ${{ steps.loc.outputs.Total_code }}
+          right-label: ${{ steps.loc.outputs.Total_code_abbreviated }}
           read-write-key: ${{ secrets.LOC_COUNT_BADGE_RW_KEY }}
       - uses: koki-develop/hub-purge-action@v1

@@ -30,11 +30,43 @@ fn run() -> Result<(), Box<dyn error::Error>> {
     let mut file = OpenOptions::new().append(true).open(&output_file)?;
     for output in outputs {
         writeln!(file, "{}_{}={}", output.language, "code", output.code)?;
+        writeln!(
+            file,
+            "{}_{}_abbreviated={}",
+            output.language, "code", output.code_abbreviated
+        )?;
+        writeln!(
+            file,
+            "{}_{}_pretty={}",
+            output.language, "code", output.code_pretty
+        )?;
+
         writeln!(file, "{}_{}={}", output.language, "blanks", output.blanks)?;
+        writeln!(
+            file,
+            "{}_{}_abbreviated={}",
+            output.language, "blanks", output.blanks_abbreviated
+        )?;
+        writeln!(
+            file,
+            "{}_{}_pretty={}",
+            output.language, "blanks", output.blanks_pretty
+        )?;
+
         writeln!(
             file,
             "{}_{}={}",
             output.language, "comments", output.comments
+        )?;
+        writeln!(
+            file,
+            "{}_{}_abbreviated={}",
+            output.language, "comments", output.comments_abbreviated
+        )?;
+        writeln!(
+            file,
+            "{}_{}_pretty={}",
+            output.language, "comments", output.comments_pretty
         )?;
     }
     file.flush()?;

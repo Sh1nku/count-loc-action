@@ -6,8 +6,9 @@ edition = "2021"
 rust-version = "1.69"
 
 [dependencies]
-csv = { version = "1.2.2"}
+csv = { version = "1"}
 tokei = { version = "13.0.0-alpha.0"}
+lazy_static = { version = "1"}
 
 [dev-dependencies]
 tempdir = "0.3.7"

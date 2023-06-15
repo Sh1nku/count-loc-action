@@ -14,13 +14,16 @@ jobs:
       - id: loc
         uses: Sh1nku/count-loc-action@v1
         with:
-          excluded: "*.json"
+          excluded: "*.yml,*.yaml"
       - name: Verify Total set
-        if: steps.loc.outputs.Total_code != null
-        run: echo "Total was set"
-      - name: Verify JSON not set
-        if: steps.loc.outputs.Json_code != null
-        run: echo "JSON was counted when it should have been excluded" && exit 1
+        if: steps.loc.outputs.Total_code == ''
+        run: echo "Total was not set, when it should have been counted" && exit 1
+      - name: Verify Rust set
+        if: steps.loc.outputs.Rust_code == ''
+        run: echo "Rust was not set, when it should have been counted" && exit 1
+      - name: Verify Yaml not set
+        if: steps.loc.outputs.Yaml_code != ''
+        run: echo "yaml was counted when it should have been excluded ${{steps.loc.outputs.Yaml_code}}" && exit 1
   test_paths:
     runs-on: ubuntu-latest
     steps:
@@ -30,14 +33,14 @@ jobs:
         with:
           paths: "src,.github"
       - name: Verify Rust set
-        if: steps.loc.outputs.Rust_code != null
-        run: echo "Total was set"
-      - name: Verify Yaml set
-        if: steps.loc.outputs.Yaml_code != null
-        run: echo "Total was set"
-      - name: Verify JSON not set
-        if: steps.loc.outputs.Json_code != null
-        run: echo "JSON was counted when the paths should not contain any" && exit 1
+        if: steps.loc.outputs.Rust_code == ''
+        run: echo "Rust was not set, when it should have been counted" && exit 1
+      - name: Verify Yaml not set
+        if: steps.loc.outputs.Yaml_code == ''
+        run: echo "Yaml was not set, when it should have been counted" && exit 1
+      - name: Verify TOML not set
+        if: steps.loc.outputs.TOML_code != ''
+        run: echo "TOML was counted when it should have been excluded" && exit 1
   example_action:
     runs-on: ubuntu-latest
     steps:
@@ -48,15 +51,23 @@ jobs:
           excluded: "*.json,*.yaml"
       - name: Verify Total set
         if: |
-          steps.loc.outputs.Total_code != null &&
-          steps.loc.outputs.Total_blanks != null &&
-          steps.loc.outputs.Total_comments != null
+          steps.loc.outputs.Total_code == '' ||
+          steps.loc.outputs.Total_code_abbreviated == '' ||
+          steps.loc.outputs.Total_code_pretty == ''
+        run: echo "Total was not set" && exit 1
+      - name: Print total
         run: |
           echo "Total loc: ${{ steps.loc.outputs.Total_code }}"
+          echo "Total loc abbreviated: ${{ steps.loc.outputs.Total_code_abbreviated }}"
+          echo "Total loc pretty: ${{ steps.loc.outputs.Total_code_pretty }}"
       - name: Verify Rust set
         if: |
-          steps.loc.outputs.Rust_code != null &&
-          steps.loc.outputs.Rust_blanks != null &&
-          steps.loc.outputs.Rust_comments != null
+          steps.loc.outputs.Rust_code == '' ||
+          steps.loc.outputs.Rust_code_abbreviated == '' ||
+          steps.loc.outputs.Rust_code_pretty == ''
+        run: echo "Rust was not set" && exit 1
+      - name: Print Rust
         run: |
-          echo "Rust was counted: ${{ steps.loc.outputs.Rust_code }}"
+          echo "Rust loc: ${{ steps.loc.outputs.Rust_code }}"
+          echo "Rust loc abbreviated: ${{ steps.loc.outputs.Rust_code_abbreviated }}"
+          echo "Rust loc pretty: ${{ steps.loc.outputs.Rust_code_pretty }}"
