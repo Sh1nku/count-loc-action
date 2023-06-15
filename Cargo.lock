@@ -198,6 +198,7 @@ name = "count-loc-action"
 version = "0.1.0"
 dependencies = [
  "csv",
+ "lazy_static",
  "tempdir",
  "tokei",
 ]

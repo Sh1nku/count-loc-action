@@ -1,3 +1,4 @@
+use crate::formatting::{abbreviate_format_number, pretty_format_number};
 use std::collections::BTreeMap;
 use std::error;
 use std::path::Path;
@@ -18,10 +19,41 @@ pub struct ChildResult {
     pub comments: usize,
 }
 
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub struct OutputResult {
+    pub language: String,
+    pub code: usize,
+    pub code_abbreviated: String,
+    pub code_pretty: String,
+    pub blanks: usize,
+    pub blanks_abbreviated: String,
+    pub blanks_pretty: String,
+    pub comments: usize,
+    pub comments_abbreviated: String,
+    pub comments_pretty: String,
+}
+
+impl From<TokeiResult> for OutputResult {
+    fn from(result: TokeiResult) -> Self {
+        OutputResult {
+            language: result.language,
+            code: result.code,
+            code_abbreviated: abbreviate_format_number(result.code),
+            code_pretty: pretty_format_number(result.code),
+            blanks: result.blanks,
+            blanks_abbreviated: abbreviate_format_number(result.blanks),
+            blanks_pretty: pretty_format_number(result.blanks),
+            comments: result.comments,
+            comments_abbreviated: abbreviate_format_number(result.comments),
+            comments_pretty: pretty_format_number(result.comments),
+        }
+    }
+}
+
 pub fn get_loc<T: AsRef<Path>>(
     paths: &[T],
     excluded: &[&str],
-) -> Result<Vec<TokeiResult>, Box<dyn error::Error>> {
+) -> Result<Vec<OutputResult>, Box<dyn error::Error>> {
     let config = Config::default();
     let mut languages = Languages::new();
     languages.get_statistics(paths, excluded, &config);
@@ -42,7 +74,7 @@ pub fn get_loc<T: AsRef<Path>>(
         }
     }));
     results.sort();
-    Ok(results)
+    Ok(results.into_iter().map(|x| x.into()).collect())
 }
 
 pub fn count_child_loc(children: &BTreeMap<LanguageType, Vec<Report>>) -> ChildResult {

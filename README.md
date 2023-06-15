@@ -10,55 +10,25 @@ Generated based on [dbanty/rust-github-action-template](https://github.com/dbant
 | `paths`    | The paths inside the github repository you are interested in | `.`      |
 | `excluded` | Unix style glob patterns to exclude from the count           | `<none>` |
 
-- `paths`:
-  - `frontend,backend,"Directory with spaces"`
-- `excluded`
-  - `*.json,node_modules,"Directory with spaces"`
-
 ## Outputs
 A list of languages with the format:
+```yaml
+<language_name>_code # eg 1200000
+<language_name>_code_pretty # eg 1 200 000
+<language_name>_code_abbreviated # eg 1.2M
+<language_name>_blanks # eg 5000
+<language_name>_blanks_pretty # eg 5 000
+<language_name>_blanks_abbreviated # eg 5.0K
+<language_name>_comments # eg 100000
+<language_name>_comments_pretty # eg 100 000
+<language_name>_comments_abbreviated # eg 100K
 ```
-<language_name>_code
-<language_name>_blanks
-<language_name>_comments
-# Eg
-Rust_code
-Rust_blanks
-Rust_comments
-```
+Language_name can be any of the languages supported by tokei.
+Eg `Rust` or `Python`
 There is also an entry for `Total` using the same format.
-
-Take a look at the languages [here](https://github.com/XAMPPRocky/tokei/blob/v12.1.2/README.md#supported-languages)
+Take a look at the languages [here](https://github.com/XAMPPRocky/tokei/blob/v13.0.0-alpha.0/README.md#supported-languages)
 
 ## Example usage
-### Standalone
-```yaml
-name: Count loc
-on: [push]
-jobs:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v3
-    - id: loc
-      uses: Sh1nku/count-loc-action@v1
-      with:
-        excluded: "*.json,*.yaml"
-    - name: Verify Total set
-      if: |
-        steps.loc.outputs.Total_code != null &&
-        steps.loc.outputs.Total_blanks != null &&
-        steps.loc.outputs.Total_comments != null
-      run: |
-        echo "Total loc: ${{ steps.loc.outputs.Total_code }}"
-    - name: Verify Rust set
-      if: |
-        steps.loc.outputs.Rust_code != null &&
-        steps.loc.outputs.Rust_blanks != null &&
-        steps.loc.outputs.Rust_comments != null
-      run: |
-        echo "Rust was counted: ${{ steps.loc.outputs.Rust_code }}"
-```
-### Badgestore.dev example
 ```yaml
 name: Count lines of code for the project, and upload to the badge store
 
@@ -70,9 +40,6 @@ on:
 jobs:
   count-loc-and-upload:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - uses: actions/checkout@v3
@@ -85,9 +52,9 @@ jobs:
         name: Update badge
         id: badge
         with:
-          right-label: ${{ steps.loc.outputs.Total_code }}
+          right-label: ${{ steps.loc.outputs.Total_code_abbreviated }} # <-- Update the badge with the total lines of code
           read-write-key: ${{ secrets.LOC_COUNT_BADGE_RW_KEY }}
-      - uses: koki-develop/hub-purge-action@v1
+      - uses: koki-develop/hub-purge-action@v1 # <-- This only works if your target repo is public, if not github will cache for 24 hours
 ```
 
 ## Limitations
