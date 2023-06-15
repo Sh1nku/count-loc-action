@@ -1,16 +1,15 @@
 name: Count lines of code for the project, and upload to the badge store
 
 on:
-  push:
-    branches:
-      - 'v1'
+  workflow_run:
+    workflows: ["Docker Publish"]
+    branches: [v1]
+    types:
+      - completed
 
 jobs:
   count-loc-and-upload:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - uses: actions/checkout@v3
